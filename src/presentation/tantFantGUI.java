@@ -3,20 +3,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.Border;
 import java.io.File;
 
 class tantFantGUI extends JFrame {
 
+    // JPanels
+    private JPanel panelGame;
+    private JPanel[] colmena;
+
+    // Buttons
+    private JPanel road;
     // Variables x
-    Dimension size;
+    private Dimension size;
+    private Color color;
 
     // Cosas del menu
-    JMenuBar menuBar;
-    JMenu manu;
-    JMenuItem save, open, nuevo, salir;
+    private JMenuBar menuBar;
+    private JMenu manu;
+    private JMenuItem save, open, nuevo, salir;
     // Guardar
-    JFileChooser choose;
-    JFileChooser chooseSave;
+    private JFileChooser choose;
+    private JFileChooser chooseSave;
 
     public tantFantGUI() {
         setTitle("tantFant");
@@ -31,6 +42,7 @@ class tantFantGUI extends JFrame {
         setLocationRelativeTo(null);
 
         prepareElementsMenu();
+        prepareElementsBoard();
 
     }
 
@@ -59,6 +71,35 @@ class tantFantGUI extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         prepareActionsMenu();
+
+    }
+
+    private void prepareElementsBoard() {
+        Border blackline = BorderFactory.createLineBorder(Color.black);
+        panelGame = new JPanel();
+        panelGame.setBorder(new CompoundBorder(new EmptyBorder(3, 3, 3, 3), new TitledBorder("Board TantFant")));
+        colmena = new JPanel[4];
+        panelGame.setLayout(new BorderLayout());
+        road = new JPanel();
+        road.setLayout(new GridLayout(2, 2));
+        for (JPanel a : colmena) {
+            a = new JPanel() {
+                @Override
+                public void paintComponents(Graphics gr) {
+                    int width = getWidth();
+                    int height = getHeight();
+
+                    super.paintComponents(gr);
+                    gr.setColor(Color.BLUE);
+                    gr.drawLine(0, 0, width - 1, height - 1);
+                }
+            };
+            a.setBorder(blackline);
+            road.add(a);
+        }
+        panelGame.add(road, BorderLayout.CENTER);
+
+        add(panelGame);
 
     }
 
