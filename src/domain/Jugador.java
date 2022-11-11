@@ -16,6 +16,39 @@ public class Jugador {
         arrangeFichas();
 
     }
+    public void gane(){
+        for(Ficha a: fichas){
+            for(Ficha b: fichas){
+                for(Ficha c: fichas){
+
+                    if((a.getPosx()== 0 && a.getPosy() == 0 )&&(b.getPosx()==1 && b.getPosy()==1)&&(c.getPosx()==2 && c.getPosy()==2)){
+
+                    }
+                    if((a.getPosx()== 2 && a.getPosy() == 0 )&&(b.getPosx()==1 && b.getPosy()==1)&&(c.getPosx()==0 && c.getPosy()==2)){
+
+                    }
+                    if((a.getPosx()== 0 && a.getPosy() == 0 )&&(b.getPosx()==1 && b.getPosy()==0)&&(c.getPosx()==2 && c.getPosy()==0)){
+
+                    }
+                    if((a.getPosx()== 0 && a.getPosy() == 2 )&&(b.getPosx()==1 && b.getPosy()==2)&&(c.getPosx()==2 && c.getPosy()==2)){
+
+                    }
+                    if((a.getPosx()== 1 && a.getPosy() == 0 )&&(b.getPosx()==1 && b.getPosy()==1)&&(c.getPosx()==1 && c.getPosy()==2)){
+
+                    }
+
+
+
+                }
+            }
+        }
+
+    }
+    public void moveFicha(int ficha, int posx, int posy) throws TantFantException{
+
+        fichas.get(ficha).changePos(posx, posy);
+
+    }
     public int getPlayer(){
         return num;
     }

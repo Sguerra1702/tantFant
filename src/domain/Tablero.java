@@ -3,7 +3,6 @@ import java.util.*;
 import java.awt.*;
 public class Tablero {
     private ArrayList<Jugador> jugadores;
-
     public Tablero(){
         jugadores = new ArrayList<Jugador>();
     }
@@ -19,7 +18,16 @@ public class Tablero {
 
         }
     }
-    
+    public void jugar(int jugador){
+
+        
+
+    }
+    private void gano(){
+        
+
+
+    }
     //METODOS PRIVADOS
     private boolean notSameTurn(int turn){
         boolean res = true;
