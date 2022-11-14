@@ -4,19 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.Border;
+import javax.swing.border.*;
 import java.io.File;
 
 class tantFantGUI extends JFrame {
 
     // JPanels
-    private JPanel panelGame;
+    private JPanel panelGame, midPanel;
     private JPanel[] colmena;
 
-    // Buttons
+    // gridslot
     private JPanel road;
     // Variables x
     private Dimension size;
@@ -25,14 +22,20 @@ class tantFantGUI extends JFrame {
     // Cosas del menu
     private JMenuBar menuBar;
     private JMenu manu;
-    private JMenuItem save, open, nuevo, salir;
+    private JMenuItem save, open, nuevo, salir, changeColor, changeSize;
     // Guardar
     private JFileChooser choose;
     private JFileChooser chooseSave;
+
+    private JButton[][] gridslot;
+
+    private int sizeBoard;
+
     private static int i = 0;
 
     public tantFantGUI() {
         setTitle("tantFant");
+        sizeBoard = Integer.parseInt(JOptionPane.showInputDialog(null, "Tamaño del tablero?"));
         prepareElements();
         prepareActions();
 
@@ -44,7 +47,7 @@ class tantFantGUI extends JFrame {
         setLocationRelativeTo(null);
 
         prepareElementsMenu();
-        prepareElementsBoard();
+        prepareElementsBoard(sizeBoard);
 
     }
 
@@ -54,6 +57,8 @@ class tantFantGUI extends JFrame {
         open = new JMenuItem("open");
         nuevo = new JMenuItem("nuevo");
         salir = new JMenuItem("salir");
+        changeColor = new JMenuItem("Cambiar Color");
+        changeSize = new JMenuItem("Cambiar tamaño del tablero");
 
         // Bars
         menuBar = new JMenuBar();
@@ -64,6 +69,8 @@ class tantFantGUI extends JFrame {
         manu.add(open);
         manu.add(save);
         manu.add(salir);
+        manu.add(changeColor);
+        manu.add(changeSize);
         menuBar.add(manu);
         setJMenuBar(menuBar);
 
@@ -76,40 +83,66 @@ class tantFantGUI extends JFrame {
 
     }
 
-    private void prepareElementsBoard() {
+    private void prepareElementsBoard(int sizeBoard) {
+        gridslot = new JButton[sizeBoard][sizeBoard];
         Border blackline = BorderFactory.createLineBorder(Color.black);
         panelGame = new JPanel();
         panelGame.setBorder(new CompoundBorder(new EmptyBorder(3, 3, 3, 3), new TitledBorder("Board TantFant")));
         colmena = new JPanel[4];
-        panelGame.setLayout(new BorderLayout());
+        panelGame.setLayout(new GridLayout(sizeBoard, sizeBoard));
         road = new JPanel();
         road.setLayout(new GridLayout(2, 2));
-        for (JPanel a : colmena) {
-            a = new JPanel() {
-                @Override
-                public void paintComponents(Graphics gr) {
-                    int width = getWidth();
-                    int height = getHeight();
-                    super.paintComponents(gr);
-                    gr.setColor(Color.BLUE);
-                    gr.drawLine(0, 0, width - 1, height - 1);
-                    if(i == 0 || i == 3) {
-                        gr.drawLine(0, 0, width, height);
-                    }
-                    else {
-                        gr.drawLine(width, 0, 0, height);
-                    }
-
+        for(int i=0;i<(sizeBoard);i++) {
+            for (int j = 0; j < (sizeBoard); j++) {
+                if (i == 0) {
+                    gridslot[i][j] = new JButton("X");
+                    panelGame.add(gridslot[i][j]);
+                    gridslot[i][j].setFocusable(false);
+                    gridslot[i][j].setForeground(Color.red);
+                    gridslot[i][j].setBackground(Color.WHITE);
+                } else if (i == sizeBoard - 1) {
+                    gridslot[i][j] = new JButton("O");
+                    panelGame.add(gridslot[i][j]);
+                    gridslot[i][j].setFocusable(false);
+                    gridslot[i][j].setForeground(Color.black);
+                    gridslot[i][j].setBackground(Color.WHITE);
+                } else {
+                    gridslot[i][j] = new JButton();
+                    panelGame.add(gridslot[i][j]);
+                    gridslot[i][j].setBackground(new Color(255, 255, 255));
+                    gridslot[i][j].setFocusable(false);
                 }
-            };
-            a.setBorder(blackline);
-            road.add(a);
-            i ++;
+                gridslot[i][j].setFont(new Font("Monocraft", Font.BOLD, 50));
+            }
         }
-        panelGame.add(road, BorderLayout.CENTER);
-
         add(panelGame);
+        midPanel = new JPanel();
+        midPanel.setBorder(new LineBorder(color, 3));
+        midPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        midPanel.setBackground(color);
+        JPanel stats = new JPanel();
+        stats.setLayout(new GridLayout(2, 1, 5, 5));
+        stats.setBorder(new LineBorder(Color.LIGHT_GRAY, 3));
+        stats.setBackground(Color.LIGHT_GRAY);
+        JLabel textMovimientos = new JLabel("MOVIMIENTOS");
+        JLabel textFichas = new JLabel("JUGADOR TURNO");
+        int movimientos = 0;
+        JLabel moves = new JLabel(Integer.toString(movimientos));
+        String turnoJugador = "J1";
+        JLabel fichasCap = new JLabel(turnoJugador);
+        stats.add(textMovimientos);
+        stats.add(moves);
+        stats.add(textFichas);
+        stats.add(fichasCap);
+        midPanel.add(stats, BorderLayout.WEST);
+        add(midPanel, BorderLayout.WEST);
 
+    }
+
+    public void refresh() {
+        this.setBackground(color);
+        panelGame.setBackground(color);
+        midPanel.setBackground(color);
     }
 
     public void prepareActionsMenu() {
@@ -144,7 +177,46 @@ class tantFantGUI extends JFrame {
             }
 
         });
+        changeColor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setBckgrndFondo();
+            }
+        });
+        changeSize.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+                chngBoardSize();
+            }
+        });
+
+    }
+
+    public void setBckgrndFondo(){
+        changeColor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                color = JColorChooser.showDialog(null, "Seleccione un color", Color.black);
+                panelGame.setBackground(color);
+                midPanel.setBackground(color);
+            }
+        });
+
+
+
+    }
+
+    public void chngBoardSize(){
+        changeSize.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                remove(panelGame);
+                sizeBoard = Integer.parseInt(JOptionPane.showInputDialog(null, "Tamaño del tablero?"));
+                prepareElementsBoard(sizeBoard);
+                refresh();
+            }
+        });
     }
 
     // Metodos de accion
