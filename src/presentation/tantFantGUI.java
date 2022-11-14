@@ -1,4 +1,5 @@
 package presentation;
+import domain.*;
 import javax.swing.*;
 
 import java.awt.*;
@@ -33,11 +34,17 @@ class tantFantGUI extends JFrame {
 
     private static int i = 0;
 
-    public tantFantGUI() {
+
+
+    private tantFant juego;
+
+    public tantFantGUI() throws TantFantException{
         setTitle("tantFant");
         sizeBoard = Integer.parseInt(JOptionPane.showInputDialog(null, "Tamaño del tablero?"));
         prepareElements();
         prepareActions();
+        juego = new tantFant();
+
 
     }
 
@@ -247,7 +254,7 @@ class tantFantGUI extends JFrame {
         chooseSave.showSaveDialog(null);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TantFantException{
         tantFantGUI xd = new tantFantGUI();
         xd.setVisible(true);
     }
